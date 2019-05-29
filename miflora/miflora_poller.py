@@ -29,6 +29,7 @@ _HANDLE_DEVICE_TIME = 0x41
 _HANDLE_HISTORY_CONTROL = 0x3e
 _HANDLE_HISTORY_READ = 0x3c
 
+_CMD_BLINK_LED = bytes([0xfd, 0xff])
 _CMD_HISTORY_READ_INIT = b'\xa0\x00\x00'
 _CMD_HISTORY_READ_SUCCESS = b'\xa2\x00\x00'
 _CMD_HISTORY_READ_FAILED = b'\xa3\x00\x00'
@@ -283,6 +284,11 @@ class MiFloraPoller(object):
 
         return device_time, wall_time
 
+
+    def blink(self):
+        '''Blink the status LED'''
+        with self._bt_interface.connect(self._mac) as connection:
+            connection.write_handle(_DATA_MODE_CHANGE, _CMD_BLINK_LED)
 
 class HistoryEntry(object):  # pylint: disable=too-few-public-methods
     """Entry in the history of the device."""
